@@ -1,20 +1,20 @@
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { ACCESS_TOKEN } from './constants';
+// import { ACCESS_TOKEN } from './constants';
 
-export default async function middleware(request: NextRequest) {
-  const cookiesStore = await cookies();
-  const accessToken = cookiesStore.get(ACCESS_TOKEN)?.value;
+export default async function middleware(_request: NextRequest) {
+  // const cookiesStore = await cookies();
+  // const accessToken = cookiesStore.get(ACCESS_TOKEN)?.value;
 
-  const { pathname } = request.nextUrl;
+  // const { pathname } = request.nextUrl;
 
-  const isRootPath = pathname === '/';
-  const isAuthPage = ['/login', '/register'].includes(pathname);
-  const requiresAuth = ['/admin', '/payment', '/order'].some((protectedPath) =>
-    pathname.startsWith(protectedPath),
-  );
+  // const isRootPath = pathname === '/';
+  // const isAuthPage = ['/login', '/register'].includes(pathname);
+  // const requiresAuth = ['/admin', '/payment', '/order'].some((protectedPath) =>
+  //   pathname.startsWith(protectedPath),
+  // );
 
   // if (isRootPath) {
   //   return NextResponse.redirect(new URL('/main', request.url))

@@ -1,3 +1,4 @@
+// eslint.config.js
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -11,21 +12,24 @@ const compat = new FlatCompat({
 });
 
 const tsEslintPlugin = await import('@typescript-eslint/eslint-plugin');
+const simpleImportSortPlugin = await import('eslint-plugin-simple-import-sort');
+const tsParser = await import('@typescript-eslint/parser');
 
-export default [
+const eslintConfig = [
   ...compat.extends(
     'next/core-web-vitals',
-    'next/typescript',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
   ),
   {
-    ignores: ['.next', 'node_modules'],
+    ignores: ['.next', 'node_modules, eslint.config.mjs'],
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser: (await import('@typescript-eslint/parser')).default,
+      parser: tsParser.default,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
@@ -37,33 +41,26 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tsEslintPlugin.default,
+      'simple-import-sort': simpleImportSortPlugin.default,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
-    },
-  },
-  {
-    files: ['**/*.js', '**/*.jsx'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
-  },
-  {
-    rules: {
-      // คำแนะนำทั่วไป
+      // ✅ General
       'no-console': 'warn',
       'no-debugger': 'warn',
       'import/no-anonymous-default-export': 'off',
 
       // ✅ TypeScript
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': ['warn', { ignoreRestArgs: true }],
       '@typescript-eslint/consistent-type-imports': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'off', // ปิดถ้ารำคาญตอน dev
-      '@typescript-eslint/no-unused-expressions': ['warn'], // หรือ 'off' ก็ได้ถ้าไม่อยากใช้
-      '@typescript-eslint/no-empty-object-type': 'off', // ปิดไม่ให้ ESLint แจ้งเตือนเกี่ยวกับการใช้ {}
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'off',
 
       // ✅ React
       'react-hooks/rules-of-hooks': 'error',
@@ -71,35 +68,22 @@ export default [
       'react/self-closing-comp': 'warn',
       'react/jsx-boolean-value': ['warn', 'never'],
       'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off', // ปิดการตรวจสอบ prop-types
+      'react/prop-types': 'off',
 
-      // ✅ Next.js App Router / React 19
+      // ✅ React 19 / Next.js App Router
       'react/jsx-no-useless-fragment': 'warn',
-      'react/no-unstable-nested-components': 'warn', // ป้องกัน inline fn ใน JSX
-      'react/jsx-no-leaked-render': 'warn', // React 19-specific
+      'react/no-unstable-nested-components': 'warn',
+      'react/jsx-no-leaked-render': 'warn',
 
-      // ✅ Import Order (ให้โค้ดสวย เป็นระบบ)
-      'import/order': [
-        'warn',
-        {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          pathGroups: [
-            {
-              pattern: 'react',
-              group: 'external',
-              position: 'before',
-            },
-            {
-              pattern: 'next/**',
-              group: 'external',
-              position: 'before',
-            },
-          ],
-          pathGroupsExcludedImportTypes: ['react'],
-          'newlines-between': 'always',
-          alphabetize: { order: 'asc', caseInsensitive: true },
-        },
-      ],
+      // ✅ Import Sort
+      'simple-import-sort/imports': 'warn',
+      'simple-import-sort/exports': 'warn',
+      'import/order': 'off', // ปิดเพราะใช้ simple-import-sort แทน
+
+      // ✅ ปิดกฎที่ Prettier จัดการให้แล้ว
+      'prettier/prettier': 'warn',
     },
   },
 ];
+
+export default eslintConfig;

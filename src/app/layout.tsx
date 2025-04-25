@@ -1,7 +1,12 @@
+import './globals.css';
+
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import type { Metadata } from 'next';
-import './globals.css';
+import AntdProvider from '@/components/providers/AntdProvider';
+import IntlProviderWrapper from '@/components/providers/IntlProviderWrapper';
+import AppContextProvider from '@/contexts';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -25,7 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <AppContextProvider>
+          <IntlProviderWrapper>
+            <AntdRegistry>
+              <AntdProvider>{children}</AntdProvider>
+            </AntdRegistry>
+          </IntlProviderWrapper>
+        </AppContextProvider>
+      </body>
     </html>
   );
 }
