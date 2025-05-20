@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { ACCESS_TOKEN } from '@/constants';
+
 const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL_API,
 });
@@ -7,7 +9,7 @@ const httpClient = axios.create({
 httpClient.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      const token: string = localStorage.getItem('accessToken') ?? '';
+      const token: string = localStorage.getItem(ACCESS_TOKEN) ?? '';
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -38,7 +40,7 @@ httpClient.interceptors.request.use(
 // 					);
 
 // 					// อัพเดท Token ใหม่
-// 					localStorage.setItem("accessToken", res.data.accessToken);
+// 					localStorage.setItem(ACCESS_TOKEN, res.data.accessToken);
 
 // 					// รีเซ็ต Header และส่ง Request ใหม่
 // 					originalRequest.headers[
@@ -48,7 +50,7 @@ httpClient.interceptors.request.use(
 // 				}
 // 			} catch (refreshError) {
 // 				console.error("Token refresh failed", refreshError);
-// 				localStorage.removeItem("accessToken");
+//         localStorage.removeItem(ACCESS_TOKEN);
 // 				window.location.href = "/login";
 // 			}
 // 		}

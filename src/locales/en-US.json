@@ -1,3 +1,5 @@
 {
-  "hello": "Hello"
+  "hello": "Hello",
+  "text.total": "Total",
+  "text.items": "Items"
 }

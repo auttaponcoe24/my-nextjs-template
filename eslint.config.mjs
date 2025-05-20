@@ -24,7 +24,7 @@ const eslintConfig = [
     'plugin:prettier/recommended',
   ),
   {
-    ignores: ['.next', 'node_modules, eslint.config.mjs'],
+    ignores: ['.next', 'node_modules', 'eslint.config.mjs'],
   },
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -71,7 +71,7 @@ const eslintConfig = [
       'react/prop-types': 'off',
 
       // ✅ React 19 / Next.js App Router
-      'react/jsx-no-useless-fragment': 'warn',
+      'react/jsx-no-useless-fragment': 'off',
       'react/no-unstable-nested-components': 'warn',
       'react/jsx-no-leaked-render': 'warn',
 
